@@ -1,11 +1,12 @@
 <?php
 
-    spl_autoload_register(function ($class) {
-        require "Core/{$class}.php";
-    });
+    require "./Core/Database.php";
+    require "./Core/Config.php";
 
-    $mysqlConfig = new Config('/var/www/config/mysql.ini');
-    $database = Database::getInstance();
-    $conn = $database->connect($mysqlConfig->getPdoDsnForDatabase('korisnici_db'));
+    $mysqlConfig = new \Core\Config('/var/www/config/mysql.ini');
+    $database = \Core\Database::getInstance();
+    $conn = $database->connect($mysqlConfig->getPdoDsnForDatabase('aooty'));
 
-    var_dump($conn->query('SELECT * FROM korisnici')->fetchAll(PDO::FETCH_ASSOC));
+    echo '<pre>';
+    var_dump($conn->query('SELECT * FROM users')->fetchAll(PDO::FETCH_ASSOC));
+    echo '</pre>';

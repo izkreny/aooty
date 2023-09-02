@@ -1,5 +1,9 @@
 <?php
 
+    namespace Core;
+    use \PDO as PDO;
+    use \PDOException as PDOException;
+
     class Database
     {
         private static $instance = null;

@@ -1,62 +1,65 @@
 <?php
 
-    include_once '../Model/Korisnik.php';
-    include_once '../View/Login.php';
-    include_once '../Config.php';
+    namespace Controller;
 
-    class LoginController
+    include_once '../Core/Config.php';
+    include_once '../Core/Database.php';
+    include_once '../Model/User.php';
+    include_once '../View/Login.php';
+
+    class Login
     {
         private $model;
         private $view;
-        private $poruke = [];
+        private $messages = [];
 
         public function __construct()
         {
-            $mysqlConfig = new Config('/var/www/config/mysql.ini');
-            $database = Database::getInstance();
-            $this->model = new KorisnikModel($database->connect($mysqlConfig->getPdoDsnForDatabase('korisnici_db')));
-            $this->view = new Login();
+            $mysqlConfig = new \Core\Config('/var/www/config/mysql.ini');
+            $database = \Core\Database::getInstance();
+            $this->model = new \Model\User($database->connect($mysqlConfig->getPdoDsnForDatabase('aooty')));
+            $this->view = new \View\Login();
         }
 
-        public function prikaziPoruke()
+        public function showMessages()
         {
-            if (!empty($this->poruke)) {
-                $this->view->prikaziPoruke($this->poruke);
+            if (!empty($this->messages)) {
+                $this->view->showMessages($this->messages);
             }
         }
 
-        public function prikaziLogin()
+        public function showForm()
         {
-            $this->view->prikaziFormu();
+            $this->view->showForm();
         }
 
-        private function provjeriEmail($email)
+        private function checkEmail($email)
         {
-            if ($this->model->postojiLi($email, 'email')) {
+            if ($this->model->checkExistence($email, 'email')) {
                 return true;
             } else {
                 return false;
             }
         }
 
-        public function obradiLogin($podaci)
+        public function process($data)
         {
-            if ($this->provjeriEmail($podaci['email'])) { // TODO: Provjeriti i je li korisnik AKTIVIRAN!!!
-                if (password_verify($podaci['lozinka'], $this->model->dohvatiLozinku($podaci['email']))) {
-                    $this->poruke[] = "Korisnik je uspješno prijavljen u sustav!";
+            if ($this->checkEmail($data['email'])) { // TODO: Check if user is activated!!!
+                if (password_verify($data['password'], $this->model->fetchPassword($data['email']))) {
+                    $this->messages[] = "Login successful!";
                 } else {
-                    $this->poruke[] = "Korisnik NIJE uspješno prijavljen u sustav!";
+                    $this->messages[] = "Login unsuccessful.";
                 }
             } else {
-                $this->poruke[] = "Korisnik NE postoji u sustavu!";
+                $this->messages[] = "The email address entered does not exists in the system.";
             }
         }
     }
 
-    $controller = new LoginController();
+    $login = new \Controller\Login();
     
     if (!empty($_POST)) {
-        $controller->obradiLogin($_POST);
+        $login->process($_POST);
     }
-    $controller->prikaziPoruke();
-    $controller->prikaziLogin();
+    $login->showMessages();
+    $login->showForm();

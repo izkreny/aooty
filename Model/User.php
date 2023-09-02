@@ -1,18 +1,19 @@
 <?php
 
-    include_once '../Database/Database.php';
+    namespace Model;
+    use \PDO as PDO;
 
-    class KorisnikModel
+    class User
     {
         private $conn;
-        private $table = 'korisnici';
+        private $table = 'users';
 
         public function __construct($db)
         {
             $this->conn = $db;
         }
 
-        public function postojiLi($string, $column)
+        public function checkExistence($string, $column)
         {
             $querry = "SELECT {$column} FROM {$this->table} WHERE {$column} = :string";
             $stmt = $this->conn->prepare($querry);
@@ -26,19 +27,19 @@
             }
         }
 
-        public function dohvatiLozinku($email)
+        public function fetchPassword($email)
         {
-            $querry = "SELECT lozinka FROM {$this->table} WHERE email = :email";
+            $querry = "SELECT password FROM {$this->table} WHERE email = :email";
             $stmt = $this->conn->prepare($querry);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
-            $lozinka = $stmt->fetch();
-            // var_dump($lozinka);
+            $password = $stmt->fetch();
+            // var_dump($password);
 
-            return $lozinka['lozinka'];
+            return $password['password'];
         }
 
-        public function aktivirajKorisnika($token)
+        public function activateUser($token)
         {
             $querry = "UPDATE {$this->table} SET status = 1, token = '' WHERE token = ?";
             $stmt = $this->conn->prepare($querry);
@@ -52,16 +53,16 @@
             }
         }
 
-        public function dodajKorisnika($podaci)
+        public function addUser($data)
         {
             $querry = "
                 INSERT INTO {$this->table}
-                (ime, prezime, email, lozinka, token)
+                (name, surname, email, password, token)
                 VALUES
-                (:ime, :prezime, :email, :lozinka, :token)
+                (:name, :surname, :email, :password, :token)
             ";
 
-            if ($this->conn->prepare($querry)->execute($podaci)) {
+            if ($this->conn->prepare($querry)->execute($data)) {
                 return true;
             } else {
                 return false;

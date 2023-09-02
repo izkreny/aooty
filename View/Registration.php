@@ -2,15 +2,18 @@
 
     namespace View;
 
-    class Login
+    class Registration 
     {
         public function showForm()
         {
             echo '
                 <form action="" method="post">
-                    Email: <input type="email" name="email" required><br>
+                    Name: <input type="text" name="name" required><br>
+                    Surname: <input type="text" name="surname" required><br>
+                    Email: <input type="text" name="email" required><br>
                     Password: <input type="password" name="password" required><br>
-                    <input type="submit" value="LOGIN">
+                    Confirm password: <input type="password" name="passwordConfirmed" required><br>
+                    <input type="submit" value="REGISTER">
                 </form>
             ';
         }
