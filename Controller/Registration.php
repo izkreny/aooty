@@ -2,8 +2,6 @@
 
     namespace Controller;
 
-    include_once '../Core/Config.php';
-    include_once '../Core/Database.php';
     include_once '../Model/User.php';
     include_once '../View/Registration.php';
 
@@ -15,9 +13,7 @@
 
         public function __construct()
         {
-            $mysqlConfig = new \Core\Config('/var/www/config/mysql.ini');
-            $database = \Core\Database::getInstance();
-            $this->model = new \Model\User($database->connect($mysqlConfig->getPdoDsnForDatabase('aooty')));
+            $this->model = new \Model\User();
             $this->view = new \View\Registration();
         }
 

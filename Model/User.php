@@ -3,14 +3,19 @@
     namespace Model;
     use \PDO as PDO;
 
+    include_once '../Core/Config.php';
+    include_once '../Core/Database.php';
+
     class User
     {
         private $conn;
         private $table = 'users';
 
-        public function __construct($db)
+        public function __construct()
         {
-            $this->conn = $db;
+            $config = new \Core\Config('/var/www/config/mysql.ini');
+            $database = \Core\Database::getInstance();
+            $this->conn = $database->connect($config->getPdoDsnForDatabase('aooty'));
         }
 
         public function checkExistence($string, $column)
