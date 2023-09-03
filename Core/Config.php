@@ -13,6 +13,19 @@
             $this->config = parse_ini_file($file, true);
         }
 
+        public function get($key, $section = null)
+        {
+            // https://www.php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
+            if ($section === null)
+            {
+                return $this->config[$key] ?? null;
+            }
+            else
+            {
+                return $this->config[$section][$key] ?? null;
+            }
+        }
+
         public function getMySQLPDODSN()
         {
             // https://www.php.net/manual/en/migration74.new-features.php#migration74.new-features.pdo
