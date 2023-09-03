@@ -5,18 +5,18 @@
     class Config
     {
         private $config = [];
+
         public function __construct($file)
         {
             // TODO: file existence check
             // https://www.php.net/manual/en/function.parse-ini-file.php
-            $this->config = parse_ini_file($file);
+            $this->config = parse_ini_file($file, true);
         }
 
-        public function getPdoDsnForDatabase($database)
+        public function getMySQLPDODSN()
         {
             // https://www.php.net/manual/en/migration74.new-features.php#migration74.new-features.pdo
-            $dsn = "mysql:" . http_build_query($this->config, '', ';') . ";dbname={$database}";
-
-            return $dsn;
+            // https://www.php.net/manual/en/function.http-build-query.php
+            return "mysql:" . http_build_query($this->config['database'], '', ';');
         }
     }

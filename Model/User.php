@@ -13,9 +13,9 @@
 
         public function __construct()
         {
-            $config = new \Core\Config('/var/www/config/mysql.ini');
-            $database = \Core\Database::getInstance();
-            $this->conn = $database->connect($config->getPdoDsnForDatabase('aooty'));
+            $config = new \Core\Config('../config.ini');
+            $database = \Core\Database::getInstance($config->getMySQLPDODSN());
+            $this->conn = $database->getConnection();
         }
 
         public function checkExistence($string, $column)
