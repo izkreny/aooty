@@ -34,20 +34,31 @@
             if ($this->model->checkExistence($email, 'email')) {
                 return true;
             } else {
+                $this->messages[] = "The email address entered does not exists in the system.";
+
+                return false;
+            }
+        }
+
+        private function isActive($email)
+        {
+            if ($this->model->checkStatus($email)) {
+                return true;
+            } else {
+                $this->messages[] = "Your account is NOT activated. You can NOT login!";
+
                 return false;
             }
         }
 
         public function process($data)
         {
-            if ($this->checkEmail($data['email'])) { // TODO: Check if user is activated!!!
+            if ($this->checkEmail($data['email']) and $this->isActive($data['email'])) {
                 if (password_verify($data['password'], $this->model->fetchPassword($data['email']))) {
                     $this->messages[] = "Login successful!";
                 } else {
-                    $this->messages[] = "Login unsuccessful.";
+                    $this->messages[] = "Login unsuccessful, invalid password.";
                 }
-            } else {
-                $this->messages[] = "The email address entered does not exists in the system.";
             }
         }
     }

@@ -29,13 +29,24 @@
             $this->view->showForm();
         }
 
+        private function checkEmail($email)
+        {
+            if ($this->model->checkExistence($email, 'email')) {
+                $this->messages[] = "The email address entered already exists in the system.";
+
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         private function checkEmailFormat($email)
         {
             // https://www.php.net/manual/en/filter.examples.validation.php
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return true;
             } else {
-                $this->messages[] = "Email formats is not valid!";
+                $this->messages[] = "Format of the email address entered is not valid!";
 
                 return false;
             }
@@ -52,22 +63,29 @@
             }
         }
 
-        private function checkEmail($email)
-        {
-            if ($this->model->checkExistence($email, 'email')) {
-                $this->messages[] = "The email address entered already exists in the system.";
-
-                return false;
-            } else {
-                return true;
-            }
-        }
-
         private function sendActivationEmail($data)
         {
-            // TODO: Send activation email with the token
+            $to = "{$data['name']} {$data['surname']} <{$data['email']}>";
+            $subject = "Activation email";
+            $url =
+                $_SERVER['REQUEST_SCHEME'] . "://"
+                . $_SERVER['SERVER_NAME']
+                . "/Controller/Activation.php?token="
+                . $data['token'];
+            $message = "Please activate your account by clicking the following link: {$url}";
+            $headers = [
+                "From" => "aooty@example.com",
+                "Reply-To" => "aooty@example.com",
+                "Return-Path" => "aooty@example.com",
+                "X-Mailer" => "PHP/" . phpversion(),
+            ];
 
-            $this->messages[] = "An email has NOT been sent to your email address containing an activation link.";
+            // https://www.php.net/manual/en/function.mail.php
+            if (mail($to, $subject, $message, $headers)) {
+                $this->messages[] = "An email has been sent to your email address containing an activation link.";
+            } else {
+                $this->messages[] = "An email has NOT been sent to your email address containing an activation link.";
+            }
         }
 
         public function process($data)

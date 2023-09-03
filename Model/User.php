@@ -32,6 +32,20 @@
             }
         }
 
+        public function checkStatus($email)
+        {
+            $querry = "SELECT status FROM {$this->table} WHERE email = :email AND status = 1";
+            $stmt = $this->conn->prepare($querry);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public function fetchPassword($email)
         {
             $querry = "SELECT password FROM {$this->table} WHERE email = :email";
@@ -46,9 +60,9 @@
 
         public function activateUser($token)
         {
-            $querry = "UPDATE {$this->table} SET status = 1, token = '' WHERE token = ?";
+            $querry = "UPDATE {$this->table} SET status = 1, token = '' WHERE token = :token";
             $stmt = $this->conn->prepare($querry);
-            $stmt->bindParam(1, $token, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
             $stmt->execute();
             
             if ($stmt->rowCount() > 0) {
