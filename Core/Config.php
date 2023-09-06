@@ -5,12 +5,14 @@
     class Config
     {
         private $config = [];
+        private $file;
 
         public function __construct($file)
         {
+            $this->file = '../config/' . $file;
             // TODO: file existence check
             // https://www.php.net/manual/en/function.parse-ini-file.php
-            $this->config = parse_ini_file($file, true);
+            $this->config = parse_ini_file($this->file, true);
         }
 
         public function get($key, $section = null)
@@ -23,6 +25,19 @@
             else
             {
                 return $this->config[$section][$key] ?? null;
+            }
+        }
+
+        public function getAll($section = null)
+        {
+            // https://www.php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
+            if ($section === null)
+            {
+                return $this->config ?? null;
+            }
+            else
+            {
+                return $this->config[$section] ?? null;
             }
         }
 

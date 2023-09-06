@@ -13,7 +13,7 @@
 
         public function __construct()
         {
-            $config = new \Core\Config('../config.ini');
+            $config = new \Core\Config('config.ini');
             $database = \Core\Database::getInstance($config->getMySQLPDODSN());
             $this->conn = $database->getConnection();
         }
