@@ -1,13 +1,13 @@
 <?php
 
-    namespace View;
+namespace View;
 
-    class Activation
+class Activation
+{
+    public function showMessages($messages)
     {
-        public function showMessages($messages)
-        {
-            foreach ($messages as $message) {
-                echo '<h3 style="color: red;">' . $message . '</h3>';
-            }
+        foreach ($messages as $message) {
+            echo '<h3 style="color: red;">' . $message . '</h3>';
         }
     }
+}
