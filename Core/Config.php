@@ -9,7 +9,7 @@
 
         public function __construct($file)
         {
-            $this->file = '../config/' . $file;
+            $this->file = base_path('config/' . $file);
             // TODO: file existence check
             // https://www.php.net/manual/en/function.parse-ini-file.php
             $this->config = parse_ini_file($this->file, true);

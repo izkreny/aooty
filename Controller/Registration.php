@@ -2,9 +2,6 @@
 
     namespace Controller;
 
-    include_once '../Model/User.php';
-    include_once '../View/Registration.php';
-
     class Registration
     {
         private $model;
@@ -70,7 +67,7 @@
             $url =
                 $_SERVER['REQUEST_SCHEME'] . "://"
                 . $_SERVER['SERVER_NAME']
-                . "/Controller/Activation.php?token="
+                . "/activate?token="
                 . $data['token'];
             $message = "Please activate your account by clicking the following link: {$url}";
             $headers = [

@@ -2,9 +2,6 @@
 
     namespace Controller;
 
-    include_once '../Model/User.php';
-    include_once '../View/Login.php';
-
     class Login
     {
         private $model;

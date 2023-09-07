@@ -3,9 +3,6 @@
     namespace Model;
     use \PDO as PDO;
 
-    include_once '../Core/Config.php';
-    include_once '../Core/Database.php';
-
     class User
     {
         private $conn;
@@ -14,8 +11,8 @@
         public function __construct()
         {
             $config = new \Core\Config('config.ini');
-            $database = \Core\Database::getInstance($config->getMySQLPDODSN());
-            $this->conn = $database->getConnection();
+            $db = \Core\Database::getInstance($config->getMySQLPDODSN());
+            $this->conn = $db->getConnection();
         }
 
         public function checkExistence($string, $column)
