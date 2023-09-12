@@ -17,8 +17,8 @@ class User
 
     public function checkExistence($string, $column)
     {
-        $querry = "SELECT {$column} FROM {$this->table} WHERE {$column} = :string";
-        $stmt = $this->conn->prepare($querry);
+        $query = "SELECT {$column} FROM {$this->table} WHERE {$column} = :string";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':string', $string, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -31,8 +31,8 @@ class User
 
     public function checkStatus($email)
     {
-        $querry = "SELECT status FROM {$this->table} WHERE email = :email AND status = 1";
-        $stmt = $this->conn->prepare($querry);
+        $query = "SELECT status FROM {$this->table} WHERE email = :email AND status = 1";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -45,8 +45,8 @@ class User
 
     public function fetchPassword($email)
     {
-        $querry = "SELECT password FROM {$this->table} WHERE email = :email";
-        $stmt = $this->conn->prepare($querry);
+        $query = "SELECT password FROM {$this->table} WHERE email = :email";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $password = $stmt->fetch();
@@ -57,8 +57,8 @@ class User
 
     public function activateUser($token)
     {
-        $querry = "UPDATE {$this->table} SET status = 1, token = '' WHERE token = :token";
-        $stmt = $this->conn->prepare($querry);
+        $query = "UPDATE {$this->table} SET status = 1, token = '' WHERE token = :token";
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':token', $token, PDO::PARAM_STR);
         $stmt->execute();
         
@@ -71,12 +71,12 @@ class User
 
     public function addUser($data)
     {
-        $querry = "INSERT INTO {$this->table}"
+        $query = "INSERT INTO {$this->table}"
             . "(name, surname, email, password, token)"
             . "VALUES"
             . "(:name, :surname, :email, :password, :token)";
 
-        if ($this->conn->prepare($querry)->execute($data)) {
+        if ($this->conn->prepare($query)->execute($data)) {
             return true;
         } else {
             return false;
